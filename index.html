@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simulador de Memoria RAM</title>
+    <style>
+        .memory-block {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid black;
+            margin: 2px;
+        }
+        .allocated {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulador de Memoria RAM</h1>
+    <div id="memory"></div>
+    <script>
+        async function updateMemory() {
+            let response = await fetch('/memory');
+            let memoryStatus = await response.json();
+            let memoryElement = document.getElementById("memory");
+            memoryElement.innerHTML = "";
+            memoryStatus.forEach(status => {
+                let block = document.createElement("div");
+                block.classList.add("memory-block");
+                if (status === 'allocated') {
+                    block.classList.add("allocated");
+                }
+                memoryElement.appendChild(block);
+            });
+        }
+
+        async function allocateMemory(size) {
+            let response = await fetch(`/allocate/${size}`, { method: 'POST' });
+            let result = await response.json();
+            if (result.success) {
+                console.log(`Memoria asignada en la posición ${result.start}`);
+                updateMemory();
+            } else {
+                console.log('No se pudo asignar memoria:', result.message);
+            }
+        }
+
+        async function releaseMemory(start, size) {
+            let response = await fetch(`/release/${start}/${size}`, { method: 'POST' });
+            let result = await response.json();
+            if (result.success) {
+                console.log('Memoria liberada exitosamente');
+                updateMemory();
+            } else {
+                console.log('Error al liberar memoria');
+            }
+        }
+
+        updateMemory();
+    </script>
+</body>
+</html>
