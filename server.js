@@ -85,3 +85,7 @@ app.post('/release/:start/:size', (req, res) => {
 app.listen(port, () => {
     console.log(`Servidor escuchando en http://localhost:${port}`);
 });
+app.get('/', (req, res) => {
+    res.send('¡Bienvenido al simulador de gestión de memoria RAM!');
+});
+
