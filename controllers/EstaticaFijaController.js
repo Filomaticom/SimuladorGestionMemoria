@@ -17,61 +17,69 @@ const procesos = [
   },
 
 ];
-const tamanoMemoria = 16 * 1024 * 1024; // 16 MB en bytes
-const tamanoSO = 1 * 1024 * 1024; // 1 MB en bytes
+const tamanoMemoria = 16 * 1024 * 1024; 
+const tamanoSO = 1 * 1024 * 1024; 
 
-// Función para obtener el tamaño de la partición
-function obtenerTamanoParticion(tamanoUsuario) {
-  if (tamanoUsuario <= 0) {
-    console.error("El tamaño de la partición debe ser mayor a 0");
-    return 0;
+
+function crearArregloMemoria(tamanoParticionUsuario) {
+  const tamanoParticionUsuarioBytes = tamanoParticionUsuario * 1024 * 1024; 
+
+
+  if (tamanoParticionUsuarioBytes <= 0 || tamanoParticionUsuarioBytes >= tamanoMemoria - tamanoSO) {
+    console.error("Tamaño de partición inválido");
+    return null;
   }
-  return Math.min(tamanoUsuario, Math.floor((tamanoMemoria - tamanoSO) / 2)); // Limitar al 50% de la memoria disponible
-}
 
-// Función para calcular el número de particiones
-function calcularNumeroParticiones(tamanoParticion) {
-  return Math.floor((tamanoMemoria - tamanoSO) / tamanoParticion);
-}
+  const particiones = [];
 
-// Obtener el tamaño de la partición del usuario
-const tamanoParticionUsuario = obtenerTamanoParticion(4); // Tamaño de partición de 4 MB
-tamanoParticionUsuario *= 1024 * 1024; // Convertir a bytes
-
-// Calcular el número de particiones
-const numeroParticiones = calcularNumeroParticiones(tamanoParticionUsuario);
-
-// Crear un arreglo para almacenar las particiones
-const particiones = [];
-
-// Agregar la partición del sistema operativo
-particiones.push({
-  tipo: "SO",
-  tamano: tamanoSO,
-  inicio: 0,
-  fin: tamanoSO - 1,
-});
-
-// Agregar las particiones regulares
-for (let i = 1; i <= numeroParticiones; i++) {
-  const inicio = tamanoSO + (i - 1) * tamanoParticionUsuario;
-  const fin = inicio + tamanoParticionUsuario - 1;
   particiones.push({
-    tipo: "Regular",
-    tamano: tamanoParticionUsuario,
-    inicio,
-    fin,
+    tipo: "SO",
+    tamano: tamanoSO,
+    inicio: 0,
+    fin: tamanoSO - 1,
   });
+
+  let inicioUsuario = tamanoSO;
+  let finUsuario = inicioUsuario + tamanoParticionUsuarioBytes - 1;
+
+  while (finUsuario < tamanoMemoria - 1) {
+    particiones.push({
+      tipo: "Usuario",
+      tamano: tamanoParticionUsuarioBytes,
+      inicio: inicioUsuario,
+      fin: finUsuario,
+    });
+    inicioUsuario = finUsuario + 1;
+    finUsuario = inicioUsuario + tamanoParticionUsuarioBytes - 1;
+  }
+
+  if (inicioUsuario < tamanoMemoria - 1) {
+    const tamanoUltimaParticion = tamanoMemoria - inicioUsuario;
+    particiones.push({
+      tipo: "Usuario",
+      tamano: tamanoUltimaParticion,
+      inicio: inicioUsuario,
+      fin: tamanoMemoria - 1,
+    });
+  }
+
+  return particiones;
 }
 
-// Mostrar información de las particiones
-for (const particion of particiones) {
-  console.log(`Partición: ${particion.tipo}`);
-  console.log(`Tamaño: ${particion.tamano} bytes`);
-  console.log(`Inicio: ${particion.inicio}`);
-  console.log(`Fin: ${particion.fin}`);
-  console.log("---");
+
+const tamanoParticionUsuario = 4;
+const particiones = crearArregloMemoria(tamanoParticionUsuario);
+
+if (particiones) {
+  for (const particion of particiones) {
+    console.log(`Partición: ${particion.tipo}`);
+    console.log(`Tamaño: ${particion.tamano} bytes`);
+    console.log(`Inicio: ${particion.inicio}`);
+    console.log(`Fin: ${particion.fin}`);
+    console.log("---");
+  }
 }
+
 
 
 
