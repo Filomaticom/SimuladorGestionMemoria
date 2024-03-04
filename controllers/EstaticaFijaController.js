@@ -17,30 +17,34 @@ const procesos = [
   },
 
 ];
+const tamanoMemoria = 16 * 1024 * 1024; // 16 MB en bytes
+const tamanoSO = 1 * 1024 * 1024; // 1 MB en bytes
 
-const tamanoMemoria = 16 * 1024 * 1024; 
-const tamanoSO = 1048576; 
-
-/
+// Función para obtener el tamaño de la partición
 function obtenerTamanoParticion(tamanoUsuario) {
   if (tamanoUsuario <= 0) {
     console.error("El tamaño de la partición debe ser mayor a 0");
     return 0;
   }
-  return Math.min(tamanoUsuario, tamanoMemoria - tamanoSO); 
+  return Math.min(tamanoUsuario, Math.floor((tamanoMemoria - tamanoSO) / 2)); // Limitar al 50% de la memoria disponible
 }
 
+// Función para calcular el número de particiones
+function calcularNumeroParticiones(tamanoParticion) {
+  return Math.floor((tamanoMemoria - tamanoSO) / tamanoParticion);
+}
 
-let tamanoParticionUsuario = obtenerTamanoParticion(prompt("Ingrese el tamaño de la partición (en MB): "));
-tamanoParticionUsuario *= 1024 * 1024; 
+// Obtener el tamaño de la partición del usuario
+const tamanoParticionUsuario = obtenerTamanoParticion(4); // Tamaño de partición de 4 MB
+tamanoParticionUsuario *= 1024 * 1024; // Convertir a bytes
 
+// Calcular el número de particiones
+const numeroParticiones = calcularNumeroParticiones(tamanoParticionUsuario);
 
-const numeroParticiones = Math.floor((tamanoMemoria - tamanoSO) / tamanoParticionUsuario) + 1;
-
-
+// Crear un arreglo para almacenar las particiones
 const particiones = [];
 
-
+// Agregar la partición del sistema operativo
 particiones.push({
   tipo: "SO",
   tamano: tamanoSO,
@@ -48,7 +52,8 @@ particiones.push({
   fin: tamanoSO - 1,
 });
 
-for (let i = 1; i < numeroParticiones; i++) {
+// Agregar las particiones regulares
+for (let i = 1; i <= numeroParticiones; i++) {
   const inicio = tamanoSO + (i - 1) * tamanoParticionUsuario;
   const fin = inicio + tamanoParticionUsuario - 1;
   particiones.push({
@@ -59,6 +64,7 @@ for (let i = 1; i < numeroParticiones; i++) {
   });
 }
 
+// Mostrar información de las particiones
 for (const particion of particiones) {
   console.log(`Partición: ${particion.tipo}`);
   console.log(`Tamaño: ${particion.tamano} bytes`);
@@ -66,4 +72,7 @@ for (const particion of particiones) {
   console.log(`Fin: ${particion.fin}`);
   console.log("---");
 }
+
+
+
 
