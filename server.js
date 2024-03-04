@@ -1,13 +1,21 @@
+
 const express = require('express');
 const path = require('path');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.set("view engine", "ejs");
+app.set("views",__dirname + "/views");
+
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.render('index', );
+});
+app.get('/EstaticaFija', (req, res) => {
+  res.render('EstaticaFija', );
 });
 
 app.listen(PORT, () => {

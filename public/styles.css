@@ -1,0 +1,26 @@
+.uk-card {
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .uk-button {
+    border-radius: 5px;
+    margin-top: 10px;
+  }
+  
+  .uk-card-primary {
+    background-color: #0073b7;
+  }
+  
+  .uk-card-default {
+    background-color: #222;
+  }
+  
+  .uk-card-warning {
+    background-color: #ffc107;
+  }
+  
+  .uk-card-danger {
+    background-color: #dc3545;
+  }
+  

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de memoria</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.7.2/css/uikit.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="uk-background-dark">
+  <div class="uk-container">
+    <div class="uk-card uk-card-default uk-card-body">
+      <h2 style="color: aliceblue;">Gestión de memoria</h2>
+      <div class="uk-grid uk-grid-collapse uk-grid-match uk-margin-bottom">
+        <div class="uk-width-1-4">
+          <div class="uk-card uk-card-primary uk-card-body">
+            <h3>Estática de Tamaño Fijo</h3>
+            <p>Muestra información sobre el uso de memoria del sistema.</p>
+            <img src="icono-memoria.svg" alt="Ver uso de memoria">
+            <div class="uk-text-center">
+              <button class="uk-button uk-button-primary">Simular</button>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-1-4">
+          <div class="uk-card uk-card-default uk-card-body">
+            <h3 style="color: aliceblue;">Estática de Tamaño Variable</h3>
+            <p style="color: aliceblue;">Libera memoria no utilizada por las aplicaciones.</p>
+            <img src="icono-liberar-memoria.svg" alt="Liberar memoria">
+            <div class="uk-text-center">
+              <button class="uk-button uk-button-default" style="color: aliceblue;">Simular</button>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-1-4">
+          <div class="uk-card uk-card-warning uk-card-body">
+            <h3>Dinámica sin Compactar</h3>
+            <p>Optimiza el uso de la memoria para mejorar el rendimiento.</p>
+            <img src="icono-optimizar-memoria.svg" alt="Optimizar memoria">
+            <div class="uk-text-center">
+              <button class="uk-button uk-button-warning">Simular</button>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-1-4">
+          <div class="uk-card uk-card-danger uk-card-body">
+            <h3 style="color: aliceblue;">Dinámica con Compactación</h3>
+            <p style="color: aliceblue;">Reorganiza la memoria para mejorar el acceso y la velocidad.</p>
+            <img src="icono-desfragmentar-memoria.svg" alt="Desfragmentar memoria">
+            <div class="uk-text-center">
+              <button class="uk-button uk-button-danger">Simular</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .uk-card .uk-text-center {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</body>
+</html>
+
