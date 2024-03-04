@@ -14,7 +14,7 @@ app.set("views",__dirname + "/views");
 app.get('/', (req, res) => {
   res.render('index', );
 });
-app.get('/EstaticaFija', (req, res) => {
+app.post('/estaticafija', (req, res) => {
   res.render('EstaticaFija', );
 });
 
