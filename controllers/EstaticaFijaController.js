@@ -1,22 +1,48 @@
+
+const stack =65536;
+const heap =131072;
+let tamanoProceso=0;
+let nombreProceso="";
+let proceso;
+let particiones = [];
+
+
+
 const procesos = [
   {
     titulo: "Proceso 1",
-    texto: "Descripción del proceso 1",
-    data: "Información específica del proceso 1",
-    bss: "100", 
-    stack: "200", 
-    heap: "300", 
+    text: "19524",
+    data: "12352",
+    bss: "1165", 
   },
   {
     titulo: "Proceso 2",
-    texto: "Descripción del proceso 2",
-    data: "Información específica del proceso 2",
-    bss: "150",
-    stack: "250", 
-    heap: "350", 
+    text: "26981",
+    data: "19524",
+    bss: "100", 
+  },
+  {
+    titulo: "Proceso 3",
+    text: "26981",
+    data: "19524",
+    bss: "100", 
+  },
+  {
+    titulo: "Proceso 4",
+    text: "26981",
+    data: "19524",
+    bss: "100", 
+  },
+  {
+    titulo: "Proceso 5",
+    text: "61125",
+    data: "19524",
+    bss: "100", 
   },
 
 ];
+
+
 const tamanoMemoria = 16 * 1024 * 1024; 
 const tamanoSO = 1 * 1024 * 1024; 
 
@@ -24,14 +50,11 @@ const tamanoSO = 1 * 1024 * 1024;
 function crearArregloMemoria(tamanoParticionUsuario) {
   const tamanoParticionUsuarioBytes = tamanoParticionUsuario * 1024 * 1024; 
 
-
   if (tamanoParticionUsuarioBytes <= 0 || tamanoParticionUsuarioBytes >= tamanoMemoria - tamanoSO) {
     console.error("Tamaño de partición inválido");
     return null;
   }
-
-  const particiones = [];
-
+  particiones = [];
   particiones.push({
     tipo: "SO",
     tamano: tamanoSO,
@@ -41,10 +64,9 @@ function crearArregloMemoria(tamanoParticionUsuario) {
 
   let inicioUsuario = tamanoSO;
   let finUsuario = inicioUsuario + tamanoParticionUsuarioBytes - 1;
-
   while (finUsuario < tamanoMemoria - 1) {
     particiones.push({
-      tipo: "Usuario",
+      tipo: "Disponible",
       tamano: tamanoParticionUsuarioBytes,
       inicio: inicioUsuario,
       fin: finUsuario,
@@ -52,11 +74,10 @@ function crearArregloMemoria(tamanoParticionUsuario) {
     inicioUsuario = finUsuario + 1;
     finUsuario = inicioUsuario + tamanoParticionUsuarioBytes - 1;
   }
-
   if (inicioUsuario < tamanoMemoria - 1) {
     const tamanoUltimaParticion = tamanoMemoria - inicioUsuario;
     particiones.push({
-      tipo: "Usuario",
+      tipo: "Disponible",
       tamano: tamanoUltimaParticion,
       inicio: inicioUsuario,
       fin: tamanoMemoria - 1,
@@ -66,21 +87,62 @@ function crearArregloMemoria(tamanoParticionUsuario) {
   return particiones;
 }
 
+function obtenerTamanoProceso(nombreProceso){
+  const procesoEncontrado = procesos.find(function(proceso) {
+  return proceso.titulo === nombreProceso;
+});
+   if(procesoEncontrado){
+     tamanoProceso = parseInt(procesoEncontrado.bss)+parseInt(procesoEncontrado.data)+parseInt(procesoEncontrado.text)+stack+heap;
+     return tamanoProceso
+   }else{
+    console.log("Proceso no encontrado");
+   }
+}
+ 
 
-const tamanoParticionUsuario = 4;
-const particiones = crearArregloMemoria(tamanoParticionUsuario);
+const { LocalStorage } = require('node-localstorage');
+const localStorage = new LocalStorage('./scratch');
 
-if (particiones) {
-  for (const particion of particiones) {
-    console.log(`Partición: ${particion.tipo}`);
-    console.log(`Tamaño: ${particion.tamano} bytes`);
-    console.log(`Inicio: ${particion.inicio}`);
-    console.log(`Fin: ${particion.fin}`);
-    console.log("---");
+function agregarProceso(nombreProceso, particiones){
+  const tamano = obtenerTamanoProceso(nombreProceso); // Obtener el tamaño del proceso
+  if (tamano > 0) { // Verificar que el tamaño sea mayor que 0
+    let asignado = false; 
+    particiones.forEach(function(particion) {
+      if (!asignado && particion.tipo === 'Disponible' && tamano <= parseInt(particion.tamano) && !particiones.find(p => p.tipo === nombreProceso)) {
+        particion.tipo = nombreProceso;
+        asignado = true; 
+        console.log("Proceso " + nombreProceso + " agregado con éxito, tamaño: " + tamano);
+        
+        localStorage.setItem('particiones', JSON.stringify(particiones));
+      }
+    });
+    if (!asignado) {
+      console.log("No se pudo asignar el proceso " + nombreProceso);
+    }
+  } else {
+    console.log("No se pudo obtener el tamaño del proceso " + nombreProceso);
   }
+  return particiones;
+}
+
+function agregarNuevoProceso(titulo, text, data, bss) {
+  const nuevoProceso = {
+    titulo: titulo,
+    text: text,
+    data: data,
+    bss: bss,
+  };
+  procesos.push(nuevoProceso);
+  agregarProceso(nuevoProceso.titulo, particiones)
+  console.log(nuevoProceso.titulo);
+
+  return particiones;
 }
 
 
-
-
+module.exports = {
+  agregarProceso,
+  crearArregloMemoria,
+  agregarNuevoProceso,
+};
 

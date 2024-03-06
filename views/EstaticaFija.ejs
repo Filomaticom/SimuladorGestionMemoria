@@ -1,44 +1,132 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de memoria</title>
+  <title>Estática de Tamaño Fijo</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.7.2/css/uikit.min.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="EFStyles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="uk-background-dark">
   <nav class="uk-navbar-container uk-navbar" uk-navbar>
     <div class="uk-navbar-left">
       <ul class="uk-navbar-nav">
-        <li class="uk-active"><a href="/estaticafija">Estática de Tamaño Fijo</a></li>
+        <li class="uk-active"><a href="/estaticafija">Tipos de Gestión de Memoria</a></li>
         <li><a href="#">Estática de Tamaño Variable</a></li>
         <li><a href="#">Dinámica sin Compactar</a></li>
         <li><a href="#">Dinámica con Compactación</a></li>
       </ul>
     </div>
   </nav>
-  <div class="uk-container">
-    <div class="uk-card uk-card-default uk-card-body">
-      <h2 style="color: aliceblue;">Gestión de memoria</h2>
-      <p>Aquí va el contenido principal de la página...</p>
-    </div>
+
+  <div class="uk-container uk-card uk-card-body uk-card-default uk-margin-bottom">
+    <h2 style="color: rgb(29, 150, 29);">Estática de Tamaño Fijo</h2>
+    <form action="/setTamanoParticiones" method="post">
+      <input type="number" name="tamanoParticiones" id="tamanoParticiones" placeholder="Tamaño de las particiones">
+      <button type="submit">Guardar Tamaño de Particiones</button>
+    </form>
   </div>
 
-  <style>
-    body {
-      background-color: #222 !important;
-    }
-    .uk-navbar-nav li a {
-      color: white;
-      font-weight: bold;
-    }
-    .uk-navbar-nav li a:hover {
-      background-color: #333;
-    }
-    .uk-navbar-nav li.uk-active a {
-      background-color: #0073b7;
-    }
-  </style>
+  <div class="uk-container uk-card uk-card-body uk-card-default uk-margin-bottom">
+    <div class="uk-grid uk-child-width-expand@s" uk-grid>
+      <div>
+        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+          <input type="hidden" name="nombreProceso" value="Proceso 1">
+          <button type="submit">Agregar Proceso 1</button>
+        </form>
+        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+          <input type="hidden" name="nombreProceso" value="Proceso 2">
+          <button type="submit">Agregar Proceso 2</button>
+        </form>
+        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+          <input type="hidden" name="nombreProceso" value="Proceso 3">
+          <button type="submit">Agregar Proceso 3</button>
+        </form>
+        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+          <input type="hidden" name="nombreProceso" value="Proceso 4">
+          <button type="submit">Agregar Proceso 4</button>
+        </form>
+        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+          <input type="hidden" name="nombreProceso" value="Proceso 5">
+          <button type="submit">Agregar Proceso 5</button>
+        </form>
+        <form action="/agregarNuevoProceso" method="post">
+          <label for="titulo">Título:</label>
+          <input type="text" id="titulo" name="titulo"><br><br>
+          
+          <label for="text">Text:</label>
+          <input type="text" id="text" name="text"><br><br>
+          
+          <label for="data">Data:</label>
+          <input type="text" id="data" name="data"><br><br>
+          
+          <label for="bss">BSS:</label>
+          <input type="text" id="bss" name="bss"><br><br>
+          
+          <input type="submit" value="Agregar Proceso" onclick="agregarProceso(document.getElementById('titulo').value)">
+        </form>
+        
+      </div>
+      <div style="margin: 0 auto; width: 50%;">
+        <h1>Tabla de Particiones</h1>
+        <table style="border: 1px solid #ddd; background-color: #fff;">
+          <thead>
+            <tr style="background-color: #eee;">
+              <th>#</th>
+              <th>PID</th>
+              <th>Tamaño</th>
+            </tr>
+          </thead>
+          <tbody id="particionesTableBody">
+            <% for (var i = 0; i < particiones.length; i++) { %>
+            <tr style="border-bottom: 1px solid #ddd; margin: 5px 0;"><td><%= i + 1 %></td>
+              <td style="text-align: center;"><%= particiones[i].tipo %></td>
+              <td style="text-align: center;"><%= particiones[i].tamano %> bytes</td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <h1 class="uk-text-center">Mapa de Memoria</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Inicio</th>
+              <th>Fin</th>
+              <th>Tipo</th>
+            </tr>
+          </thead>
+          <tbody id="particionesTableBody">
+            <% var colorFondo = "yellow"; %>
+            <% for (var i = particiones.length - 1; i >= 0; i--) { %>
+              <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 5px;"><%= particiones[i].inicio %></td>
+                <td style="padding: 5px;"><%= particiones[i].fin %></td>
+                <td style="padding: 5px; text-align: center; background-color: <% if (colorFondo === 'yellow' && i === 0) { %>yellow<% } else { %>lightgreen<% } %>;"><%= particiones[i].tipo %></td>
+                <% if (colorFondo === 'yellow' && i === 0) { %>
+                  <% colorFondo = "lightgreen"; %>
+                <% } %>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+        
+        
+        
+      
+      </div>
+    </div>
+  </div>
+    
+    
 </body>
+
 </html>
+
+
+

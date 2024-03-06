@@ -1,0 +1,12 @@
+
+#mapa  td:nth-child(1),
+#mapa  th:nth-child(1),
+#mapa  td:nth-child(2),
+#mapa  th:nth-child(2) {
+    border: none;
+}
+
+#mapa  td:nth-child(3),
+#mapa th:nth-child(3) {
+    background-color: #2c9228;
+  }
