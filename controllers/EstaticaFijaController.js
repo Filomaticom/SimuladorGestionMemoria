@@ -35,9 +35,9 @@ const procesos = [
   },
   {
     titulo: "Proceso 5",
-    text: "61125",
-    data: "19524",
-    bss: "100", 
+    text: "349000",
+    data: "2150000",
+    bss: "1000", 
   },
 
 ];
@@ -50,7 +50,7 @@ const tamanoSO = 1 * 1024 * 1024;
 function crearArregloMemoria(tamanoParticionUsuario) {
   const tamanoParticionUsuarioBytes = tamanoParticionUsuario * 1024 * 1024; 
 
-  if (tamanoParticionUsuarioBytes <= 0 || tamanoParticionUsuarioBytes >= tamanoMemoria - tamanoSO) {
+  if (tamanoParticionUsuarioBytes <= 0 || tamanoParticionUsuario>=16) {
     console.error("Tamaño de partición inválido");
     return null;
   }
@@ -139,10 +139,24 @@ function agregarNuevoProceso(titulo, text, data, bss) {
   return particiones;
 }
 
+function borrarProceso(nombreProceso, particiones) {
+  const index = particiones.findIndex(particion => particion.tipo === nombreProceso);
+  if (index !== -1) {
+    particiones[index].tipo = 'Disponible';
+    console.log("Proceso " + nombreProceso + " marcado como disponible");
+    localStorage.setItem('particiones', JSON.stringify(particiones));
+  } else {
+    console.log("Proceso " + nombreProceso + " no encontrado");
+  }
+  return particiones;
+}
+
+
 
 module.exports = {
   agregarProceso,
   crearArregloMemoria,
   agregarNuevoProceso,
+  borrarProceso,
 };
 

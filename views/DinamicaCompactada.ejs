@@ -15,7 +15,7 @@
     <div class="uk-navbar-left">
       <ul class="uk-navbar-nav">
         <li><a href="/">Home</a></li>
-        <li class="uk-active"><a href="/estaticafija">Estática de Tamaño Fijo</a></li>
+        <li class="uk-active"><a href="/estaticafija">Estatica de Tamaño Fijo</a></li>
         <li><a href="#">Estática de Tamaño Variable</a></li>
         <li><a href="#">Dinámica sin Compactar</a></li>
         <li><a href="/dinamicacompactada">Dinámica con Compactación</a></li>
@@ -23,49 +23,35 @@
     </div>
   </nav>
   <div class="uk-container uk-card uk-card-body uk-card-default uk-margin-bottom">
-    <h2 style="color: rgb(29, 150, 29);">Estática de Tamaño Fijo</h2>
-    <form action="/setTamanoParticiones" method="post" onsubmit="return validarTamano()">
-      <input type="number" name="tamanoParticiones" id="tamanoParticiones" placeholder="Tamaño de las particiones">
-      <button type="submit">Tamaño de Particiones</button>
-    </form>
+    <h2 style="color: rgb(29, 150, 29);">Dinámica con Compactación</h2>
   </div>
   
-  <script>
-    function validarTamano() {
-      var tamanoInput = document.getElementById('tamanoParticiones').value;
-      if (parseInt(tamanoInput) > 15) {
-        alert('El tamaño de las particiones no puede ser mayor a 15 Mb');
-        return false; // No se envía el formulario
-      }
-      return true; // Se envía el formulario
-    }
-  </script>
   
 
   <div class="uk-container uk-card uk-card-body uk-card-default uk-margin-bottom">
     <div class="uk-grid uk-child-width-expand@s" uk-grid>
       <div>
-        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+        <form action="/agregarProcesoD" method="post" class="uk-button uk-button-default">
           <input type="hidden" name="nombreProceso" value="Proceso 1">
           <button type="submit">Agregar Proceso 1</button>
         </form>
-        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+        <form action="/agregarProcesoD" method="post" class="uk-button uk-button-default">
           <input type="hidden" name="nombreProceso" value="Proceso 2">
           <button type="submit">Agregar Proceso 2</button>
         </form>
-        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+        <form action="/agregarProcesoD" method="post" class="uk-button uk-button-default">
           <input type="hidden" name="nombreProceso" value="Proceso 3">
           <button type="submit">Agregar Proceso 3</button>
         </form>
-        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+        <form action="/agregarProcesoD" method="post" class="uk-button uk-button-default">
           <input type="hidden" name="nombreProceso" value="Proceso 4">
           <button type="submit">Agregar Proceso 4</button>
         </form>
-        <form action="/agregarProceso" method="post" class="uk-button uk-button-default">
+        <form action="/agregarProcesoD" method="post" class="uk-button uk-button-default">
           <input type="hidden" name="nombreProceso" value="Proceso 5">
           <button type="submit">Agregar Proceso 5</button>
         </form>
-        <form action="/agregarNuevoProceso" method="post">
+        <form action="/agregarNuevoProcesoD" method="post">
           <label for="titulo">Título:</label>
           <input type="text" id="titulo" name="titulo"><br><br>
           
@@ -78,17 +64,18 @@
           <label for="bss">BSS:</label>
           <input type="text" id="bss" name="bss"><br><br>
           
-          <input type="submit" value="Agregar Proceso" onclick="agregarProceso(document.getElementById('titulo').value)">
+          <input type="submit" value="Agregar Proceso" onclick="agregarProcesoD(document.getElementById('titulo').value)">
         </form>
         <h1>Lista de Procesos</h1>
-        <% for (var i = 0; i < particiones.length; i++) { %>
-            <% if (particiones[i].tipo !== 'Disponible' && particiones[i].tipo !== 'SO') { %>
-                <form action="/borrarProceso" method="post">
-                    <input type="hidden" name="nombreProceso" value="<%= particiones[i].tipo %>">
-                    <button type="submit">Borrar <%= particiones[i].tipo %></button>
+        <% for (var i = 0; i < particionesD.length; i++) { %>
+            <% if (particionesD[i].tipo !== 'SO') { %>
+                <form action="/borrarProcesoD" method="post">
+                    <input type="hidden" name="nombreProceso" value="<%= particionesD[i].tipo %>">
+                    <button type="submit">Borrar <%= particionesD[i].tipo %></button>
                 </form>
             <% } %>
         <% } %>
+        
       </div>
       <div style="margin: 0 auto; width: 50%;">
         <h1>Tabla de Particiones</h1>
@@ -101,12 +88,12 @@
             </tr>
           </thead>
           <tbody id="particionesTableBody">
-            <% if (Array.isArray(particiones)) { %>
-              <% for (var i = 0; i < particiones.length; i++) { %>
+            <% if (Array.isArray(particionesD)) { %>
+              <% for (var i = 0; i < particionesD.length; i++) { %>
                 <tr style="border-bottom: 1px solid #ddd; margin: 5px 0; background-color: <%=(i % 2 === 0) ? '#f9f9f9' : '#fff' %>;">
                   <td><%= i + 1 %></td>
-                  <td style="text-align: center;"><%= particiones[i].tipo %></td>
-                  <td style="text-align: center;"><%= particiones[i].tamano %> bytes</td>
+                  <td style="text-align: center;"><%= particionesD[i].tipo %></td>
+                  <td style="text-align: center;"><%= particionesD[i].tamano %> bytes</td>
                 </tr>
               <% } %>
             <% } %>
@@ -125,26 +112,21 @@
             </tr>
           </thead>
           <tbody id="particionesTableBody">
-            <% if (Array.isArray(particiones)) { %>
-              <% var colorFondo = "yellow"; %>
-              <% for (var i = particiones.length - 1; i >= 0; i--) { %>
-                <tr style="border-bottom: 1px solid #ddd;">
-                  <td style="padding: 5px;"><%= particiones[i].inicio %></td>
-                  <td style="padding: 5px;"><%= particiones[i].fin %></td>
-                  <td style="padding: 5px; text-align: center; background-color: <% if (colorFondo === 'yellow' && i === 0) { %>yellow<% } else { %>lightgreen<% } %>;"><%= particiones[i].tipo %></td>
-                  <% if (colorFondo === 'yellow' && i === 0) { %>
-                    <% colorFondo = "lightgreen"; %>
-                  <% } %>
-                </tr>
-              <% } %>
+            <% var colorFondo = "yellow"; %>
+            <% for (var i = particionesD.length - 1; i >= 0; i--) { %>
+              <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 5px;"><%= particionesD[i].inicio %></td>
+                <td style="padding: 5px;"><%= particionesD[i].fin %></td>
+                <td style="padding: 5px; text-align: center; background-color: <% if (colorFondo === 'yellow' && i === 0) { %>yellow<% } else { %>lightgreen<% } %>;"><%= particionesD[i].tipo %></td>
+                <% if (colorFondo === 'yellow' && i === 0) { %>
+                  <% colorFondo = "lightgreen"; %>
+                <% } %>
+              </tr>
             <% } %>
           </tbody>
-          
         </table>
         
         
-        
-      
       </div>
     </div>
   </div>
@@ -153,6 +135,3 @@
 </body>
 
 </html>
-
-
-

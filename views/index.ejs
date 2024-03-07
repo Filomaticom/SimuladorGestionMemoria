@@ -6,62 +6,105 @@
   <title>Gestión de memoria</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/3.7.2/css/uikit.min.css">
   <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+    }
+    .uk-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .uk-grid-match > div {
+      margin-bottom: 20px;
+    }
+    .uk-card {
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: box-shadow 0.3s ease;
+    }
+    .uk-card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .uk-card-body {
+      padding: 20px;
+    }
+    .uk-button {
+      border-radius: 5px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
 </head>
-<body class="uk-background-dark">
+<body>
   <div class="uk-container">
-    <div class="uk-card uk-card-default uk-card-body">
-      <h2 style="color: aliceblue;">Gestión de memoria</h2>
-      <div class="uk-grid uk-grid-collapse uk-grid-match uk-margin-bottom">
-        <div class="uk-width-1-4">
-          <div class="uk-card uk-card-primary uk-card-body">
+    <h1>Gestión de Memoria</h1>
+    <div class="uk-grid uk-grid-collapse uk-grid-match">
+      <div class="uk-width-1-2@m">
+        <div class="uk-card uk-card-primary">
+          <div class="uk-card-body">
             <h3>Estática de Tamaño Fijo</h3>
-            <p>Muestra información sobre el uso de memoria del sistema.</p>
-            <img src="icono-memoria.svg" alt="Ver uso de memoria">
+            <p>
+              Cada proceso tiene una cantidad fija de memoria asignada al inicio.
+              Ventajas: Simple y eficiente.
+              Desventajas: No se adapta a las necesidades cambiantes de los procesos, puede haber fragmentación interna.</p>
             <div class="uk-text-center">
-              <a  href="/estaticafija" class="uk-button uk-button-primary">Simular</a>
+              <a href="/estaticafija" class="uk-button uk-button-primary">Simular</a>
             </div>
           </div>
         </div>
-        <div class="uk-width-1-4">
-          <div class="uk-card uk-card-default uk-card-body">
-            <h3 style="color: aliceblue;">Estática de Tamaño Variable</h3>
-            <p style="color: aliceblue;">Libera memoria no utilizada por las aplicaciones.</p>
-            <img src="icono-liberar-memoria.svg" alt="Liberar memoria">
+      </div>
+      <div class="uk-width-1-2@m">
+        <div class="uk-card uk-card-default">
+          <div class="uk-card-body">
+            <h3>Estática de Tamaño Variable</h3>
+            <p>La memoria se asigna a los procesos en bloques de diferentes tamaños.
+              Ventajas: Más flexible que la estática de tamaño fijo.
+              Desventajas: Puede haber fragmentación externa.</p>
             <div class="uk-text-center">
-              <a class="uk-button uk-button-default" style="color: aliceblue;">Simular</a>
+              <a href="/estaticavariable" class="uk-button uk-button-default">Simular</a>
             </div>
           </div>
         </div>
-        <div class="uk-width-1-4">
-          <div class="uk-card uk-card-warning uk-card-body">
+      </div>
+      <div class="uk-width-1-2@m">
+        <div class="uk-card uk-card-warning">
+          <div class="uk-card-body">
             <h3>Dinámica sin Compactar</h3>
-            <p>Optimiza el uso de la memoria para mejorar el rendimiento.</p>
-            <img src="icono-optimizar-memoria.svg" alt="Optimizar memoria">
+            <p>La memoria se asigna a los procesos en bloques de tamaño variable.
+              Los bloques de memoria no utilizados se liberan y se agregan a un pool libre.
+              Ventajas: Muy flexible, no hay fragmentación interna.
+              Desventajas: Puede haber fragmentación externa.</p>
             <div class="uk-text-center">
-              <a class="uk-button uk-button-warning">Simular</a>
+              <a href="/dinamicasimple" class="uk-button uk-button-warning">Simular</a>
             </div>
           </div>
         </div>
-        <div class="uk-width-1-4">
-          <div class="uk-card uk-card-danger uk-card-body">
-            <h3 style="color: aliceblue;">Dinámica con Compactación</h3>
-            <p style="color: aliceblue;">Reorganiza la memoria para mejorar el acceso y la velocidad.</p>
-            <img src="icono-desfragmentar-memoria.svg" alt="Desfragmentar memoria">
+      </div>
+      <div class="uk-width-1-2@m">
+        <div class="uk-card uk-card-danger">
+          <div class="uk-card-body">
+            <h3>Dinámica con Compactación</h3>
+            <p>
+              Similar a la dinámica sin compactación, pero la memoria libre se compacta para eliminar la fragmentación externa.
+              Ventajas: Muy flexible, no hay fragmentación interna ni externa.
+              Desventajas: Más compleja que la dinámica sin compactación, puede ser más lenta.</p>
             <div class="uk-text-center">
-              <a class="uk-button uk-button-danger">Simular</a>
+              <a href="/dinamicacompactada" class="uk-button uk-button-danger">Simular</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <style>
-    .uk-card .uk-text-center {
-      display: flex;
-      justify-content: center;
-    }
-  </style>
 </body>
 </html>
+
 
